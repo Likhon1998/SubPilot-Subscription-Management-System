@@ -1,20 +1,36 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\AuthController;
 
-Route::get('/', function () {
-    return view('welcome');
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->group(function () {
+
+    // Admin Login Routes
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [AuthController::class, 'login'])->name('admin.login.post');
+
+    // Admin Logout Route
+    Route::post('/logout', function () {
+        Auth::logout();
+        return redirect()->route('admin.login')->with('status', 'You have been logged out successfully.');
+    })->name('admin.logout');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+/*
+|--------------------------------------------------------------------------
+| Protected Admin Routes (Requires Login + Role)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.auth.dashboard');
+    })->name('admin.dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Future routes go here (products, subscriptions, etc.)
 });
-
-require __DIR__.'/auth.php';

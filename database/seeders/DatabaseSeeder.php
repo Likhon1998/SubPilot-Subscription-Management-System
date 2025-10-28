@@ -2,24 +2,46 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // ===== Create Default Roles =====
+        Role::firstOrCreate(['name' => 'admin']);
+        Role::firstOrCreate(['name' => 'customer']);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // ===== Create Default Admin User =====
+        $admin = User::firstOrCreate(
+            ['email' => 'superadmin@gmail.com'], // check by email
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('12345678'), // default password
+            ]
+        );
+
+        // ===== Assign Admin Role =====
+        if (!$admin->hasRole('admin')) {
+            $admin->assignRole('admin');
+        }
+
+        // Optional: Example Customer User
+        // $customer = User::firstOrCreate(
+        //     ['email' => 'customer@subpilot.com'],
+        //     [
+        //         'name' => 'Demo Customer',
+        //         'password' => Hash::make('password'),
+        //     ]
+        // );
+        // $customer->assignRole('customer');
+
+        $this->command->info('✅ Roles and Admin User seeded successfully.');
     }
 }

@@ -1,0 +1,21 @@
+body {
+    background-color: #FFF8DC; /* Cornsilk */
+    font-family: 'Figtree', sans-serif;
+}
+
+.card {
+    background-color: #FFF0F5; /* LavenderBlush */
+    border: 1px solid #F5DEB3; /* Beige-like border */
+}
+
+.btn-primary {
+    background-color: #FFDAB9; /* PeachPuff */
+    border-color: #FFDAB9;
+    color: #333;
+}
+
+.btn-primary:hover {
+    background-color: #E6B89C;
+    border-color: #E6B89C;
+    color: #000;
+}

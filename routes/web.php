@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\SslCommerzPaymentController;
 
 
 
@@ -18,7 +19,18 @@ Route::post('/checkout/submit', [CheckoutController::class, 'submitCustomerInfo'
 Route::get('/checkout/otp/{customer}', [CheckoutController::class, 'showOtpForm'])->name('checkout.otp.form');
 Route::post('/checkout/otp/verify', [CheckoutController::class, 'verifyOtp'])->name('checkout.otp.verify');
 Route::get('/checkout/payment/{customer}', [CheckoutController::class, 'showPayment'])->name('checkout.payment');
-Route::post('/checkout/payment/process', [CheckoutController::class, 'processPayment'])->name('checkout.payment.process');
+
+
+
+Route::match(['get','post'], '/ssl/pay', [SslCommerzPaymentController::class, 'payNow'])->name('checkout.payment.process');
+Route::match(['get','post'], '/ssl/success', [SslCommerzPaymentController::class, 'success'])->name('ssl.success');
+Route::match(['get','post'], '/ssl/fail', [SslCommerzPaymentController::class, 'fail'])->name('ssl.fail');
+Route::match(['get','post'], '/ssl/cancel', [SslCommerzPaymentController::class, 'cancel'])->name('ssl.cancel');
+
+
+
+
+
 
 
 

@@ -16,12 +16,13 @@ class Subscription extends Model
         'total_amount',
         'start_date',
         'end_date',
-        'status',
+        'active', 
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
+        'active' => 'boolean',
     ];
 
     public function customer()
